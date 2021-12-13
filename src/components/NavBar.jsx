@@ -3,9 +3,11 @@ import {
   Routes,
   Route,
   BrowserRouter as Router,
+  Navigate,
+  Outlet,
 } from "react-router-dom";
 import { useState } from "react";
-import { Navbar, Nav, Container} from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import Profiles from "./Profiles";
 import Dashboard from "./Dashboard";
 import Users from "./Users";
@@ -16,6 +18,16 @@ import SignIn from "./SignIn";
 const NavBar = () => {
   const [modalSignUpShow, setModalSignUpShow] = useState(false);
   const [modalSignInShow, setModalSignInShow] = useState(false);
+
+  const PrivateRoute = ({ children }) => {
+    const auth = useAuth();
+    setModalSignInShow(true);
+    return auth ? children : <Navigate to="/signin" />;
+  };
+
+  function useAuth() {
+    return false;
+  }
 
   console.log("NavBar");
   return (
@@ -79,9 +91,30 @@ const NavBar = () => {
           {/* <Route path="/" element={<Navigate replace to="/signin" />} /> */}
           <Route path="/" />
           <Route path="/signin" />
-          <Route path="/profiles" element={<Profiles />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<Users />} />
+          <Route
+            path="/profiles"
+            element={
+              <PrivateRoute>
+                <Profiles />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute>
+                <Users />
+              </PrivateRoute>
+            }
+          />
           <Route path="/signup" />
         </Routes>
       </Container>

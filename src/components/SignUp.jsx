@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal, Container, Button, Form } from "react-bootstrap";
 
 const SignUpModal = (props) => {
+  const { isOpen, onHide, handleLogin } = props;
   const [signUpData, setSignUpData] = useState({
     signUsername: "",
     signEmail: "",
