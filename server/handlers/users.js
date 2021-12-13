@@ -1,4 +1,6 @@
-const db = require("./db");
+const db = require("../lib/db");
+const format = require("pg-format");
+
 const pool = db.pool;
 
 const listUsers = (request, response) => {
@@ -21,10 +23,14 @@ const getUserById = (request, response) => {
 };
 
 const createUser = (request, response) => {
-  const { password, email } = request.body;
-  pool.query(
-    "INSERT INTO users (password, email) VALUES ($1, $2) RETURNING *",
-    [password, email],
+  const newUser = request.body;
+
+  const queryString = format(
+    `INSERT INTO users(%I) VALUES (%L) RETURNING *`,
+    Object.keys(newUser),
+    Object.values(newUser)
+  );
+  pool.query(queryString,
     (error, result) => {
       if (error) {
         console.error(error.stack);
@@ -36,19 +42,17 @@ const createUser = (request, response) => {
   );
 };
 
-const updateUser = (request, response) => {
+const updateUser = async (request, response) => {
   const id = parseInt(request.params.id);
-  const { password, email, isAdmin } = request.body;
-  pool.query(
-    "UPDATE users SET password = $1, email = $2, isAdmin = $3 WHERE id = $4 RETURNING *",
-    [password, email, isAdmin, id],
-    (error, results) => {
-      if (error) {
-        throw error;
-      }
-      response.status(200).send(`User modified with ID: ${id}`);
-    }
-  );
+
+  try {
+    const updatedUser = await db.update('users', id, request.body)
+    response.status(201).json(updatedUser)
+  }  catch (err) {
+    console.log(err)
+    response.status(400).send(err.detail)
+    
+  }
 };
 
 const deleteUser = (request, response) => {

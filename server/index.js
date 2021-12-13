@@ -1,32 +1,43 @@
 const express = require("express");
+const uuid = require("uuid");
+const expressSession = require("express-session");
 const bodyParser = require("body-parser");
-const app = express();
-const users = require("./models/users");
-const profiles = require("./models/profile");
+const db = require("./lib/db");
+const Settings = require("./conf").Settings;
+const router = require("./router");
 
-const port = 3000;
+const APP = express();
 
-app.use(bodyParser.json());
+APP.use(bodyParser.json());
 
-app.use(
+APP.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
-app.get("/", (request, response) => {
-  response.json({ info: "Node.js, Express, and Postgres API" });
-});
+const SessionStore = require("connect-pg-simple")(expressSession);
 
-app.get("/users", users.listUsers);
-app.get("/users/:id", users.getUserById);
-app.post("/users", users.createUser);
-app.put("/users/:id", users.updateUser);
-app.delete("/users/:id", users.deleteUser);
+APP.use(
+  expressSession({
+    genid: (req) => {
+      return uuid.v4(); // use UUIDs for session IDs
+    },
+    store: new SessionStore({
+      tableName: "session",
+      pool: db.pool,
+      conObject: Settings.db,
+    }),
+    name: "SID",
+    secret: "verySecret",
+    resave: true,
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+    saveUninitialized: true,
+  })
+);
 
-app.get("/users/:userId/profiles", profiles.listProfiles);
-app.post("/users/:userId/profiles", profiles.createProfile);
-
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+APP.use("/", router);
+console.log(Settings);
+APP.listen(Settings.port, () => {
+  console.log(`App running on port ${Settings.port}.`);
 });
