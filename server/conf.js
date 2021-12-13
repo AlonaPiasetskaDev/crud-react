@@ -3,7 +3,7 @@ const Settings = {
   db: {
     user: "postgres",
     host: "localhost",
-    database: "default",
+    database: "logindb",
     password: "enxx5z42",
     port: 5432,
   },
@@ -13,6 +13,9 @@ const Settings = {
     resave: true,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
     saveUninitialized: true,
+  },
+  jwt: {
+    secret: "jwtSecret",
   },
 };
 

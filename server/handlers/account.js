@@ -1,21 +1,16 @@
-const db = require("../lib/db");
-
-
+const { User } = require("../models");
 
 const getAccount = async (request, response) => {
-    const userId = parseInt(request.session.userId);
-    try {
-      const user = await db.get('users', {id: userId})
-      console.log(user[0]);
-      const profiles = await db.get('profiles', {user_id: userId})
+  const userId = parseInt(request.session.userId);
+  try {
+    const user = await User.findOne({ where: { id: userId } });
 
-    //   response.status(200).json({...user, profile: profile})
-      return response.status(200).json({...user[0], profiles: profiles})
-    } catch (error) {
-      return response.status(400).json(error.detail)
-    }
-  };
+    return response.json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
-    getAccount
-}
+  getAccount,
+};

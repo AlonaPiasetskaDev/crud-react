@@ -1,100 +1,100 @@
-const db = require("../lib/db");
-const pool = db.pool;
+const jwt = require("jsonwebtoken");
+const Settings = require("../conf");
 
-const requireAuth = (request, response, next) => {
-  if (request.session.loggedin) return next();
-  else return response.sendStatus(401);
-};
+const { User, Profile, Session } = require("../models");
 
-const requireAdmin = (request, response, next) => {
-  console.log(request.session);
-  if (request.session.admin) {
-    return next();
-  } else {
-    return response.status(403).send("Requires admin permissions");
-  }
-};
+const requireAuth = async (request, response, next) => {
+  const token = request.header("authorization");
 
-const checkPermission = (request, response, next) => {
-  console.log(request);
-};
-
-const requireOwner = (request, response, next) => {
-  console.log(request);
-  return next();
-};
-
-const handleSignin = async (request, response) => {
-  const email = request.body.email;
-  const password = String(request.body.password);
-  if (!email || !password) {
-    response.status(400).json("Missing credentials");
-    return;
+  if (token == null) {
+    return response.status(401).json({ error: "Access-denied" });
   }
 
   try {
-    const data = await db.get("users", { email: email });
-    console.log(data[0].password);
-    if (data[0].password === password) {
-      request.session.loggedin = true;
-      request.session.userId = data[0].id;
-      request.session.admin = data[0].isAdmin;
-      return response.status(200).json("Authorized");
+    const saved = await Session.findOne({ where: { token: token } });
+    console.log(saved);
+    if (saved && saved.token == token) {
+      const user = await jwt.verify(token, Settings.jwt.secret);
+      console.log(user);
+      request.user = user;
+      next();
     } else {
-      response.status(403).json({ error: "Bad credentials" });
-      return;
+      response.status(401).json({ error: "Unauthorized" });
     }
-  } catch (error) {
-    console.error(error.stack);
-    response.status(403).json({ error: error });
-    return;
+  } catch (err) {
+    response.status(401).json({ error: err });
+  }
+};
+
+const jwtLogin = async (request, response) => {
+  let creds = request.body;
+  const user = await User.findOne({
+    where: { email: creds.email, password: creds.password },
+  });
+  if (user) {
+    const data = { id: user.id, email: user.id, isAdmin: user.isAdmin };
+    const accessToken = jwt.sign(data, Settings.jwt.secret, {
+      expiresIn: "1800s",
+    });
+    await user.createSession({ token: accessToken });
+    console.log(user, accessToken);
+
+    response.status(201).json({ token: accessToken });
+  } else {
+    response.status(502).json({ error: "Wrong username or password" });
   }
 };
 
 const handleSignup = async (request, response) => {
-  const userParams = {
+  const params = {
     email: request.body.email,
-    password: request.body.email,
-    isAdmin: false,
+    password: request.body.password,
+    isAdmin: request.body.isAdmin,
+    name: request.body.name,
   };
-  let profileParams = { name: request.body.name };
-  if (request.body.birthday) {
-    profileParams = {
-      birthdate: new Date(...request.body.birthdate.split("-")),
-      ...profileParams,
-    };
+  if (request.body.birthdate) {
+    params.profiles = [
+      { birthdate: new Date(request.body.birthdate), name: request.body.name },
+    ];
   }
 
   try {
-    const newUser = await db.create("users", userParams);
-    const newProfiel = await db.create("profiles", {
-      user_id: newUser.id,
-      ...profileParams,
-    });
-    console.log(newProfiel);
-    return response.status(201).json({ id: newUser.id });
-  } catch (error) {
-    console.error(error.stack);
-    response.status(400).send(error.detail);
+    const newUser = await User.create(params, { include: [Profile] });
+    if (newUser) {
+      response.status(201).json({ id: newUser.id });
+    }
+  } catch (err) {
+    response.status(400).send(err);
   }
+
   response.end();
 };
 
 const handleSignout = async (request, response) => {
-  if (request.session.userId && request.session.loggedin) {
-    request.session.destroy(function (err) {
-      console.log(err);
-    });
+  const token = request.header("authorization");
+
+  if (token == null) {
+    return response.status(401).json({ error: "Access-denied" });
   }
-  return response.status(200).json("Success");
+
+  try {
+    const saved = await Session.findOne({ where: { token: token } });
+
+    if (saved && saved.token === token) {
+      request.user = null;
+      await saved.destroy();
+      response.status(200).json("Success");
+    } else {
+      response.status(401).json({ error: "Unauthorized" });
+    }
+  } catch (err) {
+    response.status(401).json({ errror: err });
+  }
 };
 
 module.exports = {
-  requireOwner,
-  requireAdmin,
+  jwtLogin,
   requireAuth,
-  checkPermission,
-  handleSignin,
   handleSignup,
   handleSignout,
 };

@@ -1,13 +1,24 @@
 const express = require("express");
-const uuid = require("uuid");
-const expressSession = require("express-session");
+// const uuid = require("uuid");
+var cors = require("cors");
+//
+// const expressSession = require("express-session");
+
 const bodyParser = require("body-parser");
-const db = require("./lib/db");
-const Settings = require("./conf").Settings;
+const db = require("./db");
+const Settings = require("./conf");
 const router = require("./router");
+
+// const SessionStore = require('express-session-sequelize')(expressSession.Store);
 
 const APP = express();
 
+// const sequelizeSessionStore = new SessionStore({
+//     db: db,
+//     table : 'session'
+// });
+
+APP.use(cors({ origin: "*" }));
 APP.use(bodyParser.json());
 
 APP.use(
@@ -16,28 +27,18 @@ APP.use(
   })
 );
 
-const SessionStore = require("connect-pg-simple")(expressSession);
-
-APP.use(
-  expressSession({
-    genid: (req) => {
-      return uuid.v4(); // use UUIDs for session IDs
-    },
-    store: new SessionStore({
-      tableName: "session",
-      pool: db.pool,
-      conObject: Settings.db,
-    }),
-    name: "SID",
-    secret: "verySecret",
-    resave: true,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
-    saveUninitialized: true,
-  })
-);
-
 APP.use("/", router);
-console.log(Settings);
-APP.listen(Settings.port, () => {
-  console.log(`App running on port ${Settings.port}.`);
-});
+
+const start = async () => {
+  try {
+    await db.authenticate();
+    await db.sync();
+    APP.listen(Settings.port, () => {
+      console.log(`App running on port ${Settings.port}.`);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+start();
