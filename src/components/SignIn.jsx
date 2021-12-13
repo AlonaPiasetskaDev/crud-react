@@ -1,9 +1,20 @@
 import { Container, Form, Button, Modal } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import { AppContext } from "../context/AppContext";
 
 const SignIn = (props) => {
-  console.log("SignIn");
-  const [result, setResult] = useState({ resEmail: "", resPassword: "" });
+  const [result, setResult] = useState({ email: "", password: "" });
+  const { handleLogin } = useContext(AppContext);
+
+  const loginUser = async (event) => {
+    event.preventDefault();
+    const token = await handleLogin(result.email, result.password);
+    if (token) {
+      window.localStorage.setItem("token", token);
+    }
+    props.onHide();
+  };
 
   return (
     <Modal {...props} fullscreen={true}>
@@ -11,12 +22,7 @@ const SignIn = (props) => {
         <Container className="mt-5 justify-content-center">
           <h2>Sign In:</h2>
           <Container className="mt-5">
-            <Form
-              onSubmit={(e) => {
-                e.preventDefault();
-                console.log("result", result);
-              }}
-            >
+            <Form onSubmit={loginUser}>
               <Container>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email</Form.Label>
@@ -24,9 +30,8 @@ const SignIn = (props) => {
                     onChange={(e) => {
                       setResult((prevState) => ({
                         ...prevState,
-                        resEmail: e.target.value,
+                        email: e.target.value,
                       }));
-                      console.log("result", result);
                     }}
                     type="email"
                     placeholder="Enter email"
@@ -38,9 +43,8 @@ const SignIn = (props) => {
                     onChange={(e) => {
                       setResult((prevState) => ({
                         ...prevState,
-                        resPassword: e.target.value,
+                        password: e.target.value,
                       }));
-                      console.log("result", result);
                     }}
                     type="password"
                     placeholder="Password"
