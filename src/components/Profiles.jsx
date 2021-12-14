@@ -194,16 +194,6 @@ const Profiles = () => {
 
   console.log(currentUser);
 
-  // console.log("profiles");
-  // //
-  // let profiles;
-  // fetch(`http://localhost:4000/${currentUser.id}/profiles/`)
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log("data", data);
-  //     profiles = data;
-  //   });
-  // console.log(profiles);
 
   return (
     <Container className="profiles">
@@ -310,22 +300,22 @@ const Profiles = () => {
     </Container>
   );
 
-  // profiles.forEach((profile) => {
-  //   <Card style={{ width: "18rem" }}>
-  //     <Card.Body>
-  //       <Card.Title>profile name</Card.Title>
-  //       <Card.Text>
-  //         <h2>{profile.gender}</h2>
-  //         {profile.birthday !== "null" && <h2>profile.birthday</h2>}
-  //         <h2>{profile.city}</h2>
-  //       </Card.Text>
-  //     </Card.Body>
-  //     <Card.Footer>
-  //       <Button variant="primary">Edit</Button>
-  //       <Button variant="danger">Delete</Button>
-  //     </Card.Footer>
-  //   </Card>;
-  // });
+  profiles.forEach((profile) => {
+    <Card style={{ width: "18rem" }}>
+      <Card.Body>
+        <Card.Title>profile name</Card.Title>
+        <Card.Text>
+          <h2>{profile.gender}</h2>
+          {profile.birthday !== "null" && <h2>profile.birthday</h2>}
+          <h2>{profile.city}</h2>
+        </Card.Text>
+      </Card.Body>
+      <Card.Footer>
+        <Button variant="primary">Edit</Button>
+        <Button variant="danger">Delete</Button>
+      </Card.Footer>
+    </Card>;
+  });
 };
 
 export default Profiles;

@@ -7,14 +7,12 @@ const ProfilesContext = createContext({});
 
 export const ProfilesProvider = (props) => {
   const { currentUser } = useAuth();
+  console.log("currentUser", currentUser);
   // stores authorized user profiles
   const [profiles, setProfiles] = useState(null);
 
   useEffect(() => {
-    api.get(`users/${currentUser.id}/profiles`).then((data) => {
-      console.log(data);
-      setProfiles(data);
-    });
+    api.get(`users/${currentUser.id}/profiles`).then((data) => setProfiles(data));
   }, [currentUser]);
 
   const fetchProfiles = async (userId) => {
