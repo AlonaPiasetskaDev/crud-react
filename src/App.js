@@ -1,12 +1,17 @@
 import "./App.css";
+import React from "react";
 import Home from "./components/Home";
-
+import { AuthProvider } from "./context/auth";
+import { ProfilesProvider } from "./context/profiles";
 
 const App = (props) => {
-  console.log("App");
   return (
     <div className="App">
-      <Home />
+      <AuthProvider>
+        <ProfilesProvider>
+          <Home />
+        </ProfilesProvider>
+      </AuthProvider>
     </div>
   );
 };
