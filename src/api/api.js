@@ -1,54 +1,21 @@
-// fetch(url, {
-//   credentials: "same-origin"
-// }).then(...).catch(...);
-
-// POST api with credentials: 'include'
-
-import { useState, useEffect } from "react";
-import { Fragment } from "react-bootstrap";
-import { WithLoading } from "./WithLoading";
-
-const GetUsers = () => {
-  // const UsersLoading = WithLoading(Users);
-  const [appState, setAppState] = useState({
-    loading: false,
-    users: null,
-  });
-
-  useEffect(() => {
-    setAppState({ loading: true });
-    const baseURL = "localhost:3000/users";
-    fetch(baseURL)
-      .then((res) => res.json())
-      .then((users) => {
-        setAppState({ loading: false, users: users });
-      });
-  }, [setAppState]);
-  return <Fragment></Fragment>;
+const post = async (endpoint, body) => {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...defaults.headers },
+    body: JSON.stringify(body),
+  };
+  console.log(options);
+  const res = await fetch(`${defaults.host}/${endpoint}`, options);
+  if (!res.ok) {
+    throw new Error(`An error has occured: ${res.status}`);
+  }
+  return await res.json();
 };
-
-const GetUser = (id) => {
-  // const UsersLoading = WithLoading(User);
-  const [userState, setUserState] = useState({
-    loading: false,
-    user: null,
-  });
-
-  useEffect(
-    (id) => {
-      setUserState({ loading: true });
-      const baseURL = `localhost:3000/users/${id}`;
-      fetch(baseURL)
-        .then((res) => res.json())
-        .then((user) => {
-          setUserState({ loading: false, user: user });
-        });
-    },
-    [setUserState]
-  );
-  return <Fragment></Fragment>;
+export { post };
+export const defaults = {
+  host: "http://localhost:4000",
+  headers: {
+    Authorization: "",
+    ContentType: "application/json",
+  },
 };
-
-
-export { GetUsers, GetUser };
-
