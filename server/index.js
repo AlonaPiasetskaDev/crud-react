@@ -1,22 +1,11 @@
 const express = require("express");
-// const uuid = require("uuid");
-var cors = require("cors");
-//
-// const expressSession = require("express-session");
-
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./db");
 const Settings = require("./conf");
 const router = require("./router");
 
-// const SessionStore = require('express-session-sequelize')(expressSession.Store);
-
 const APP = express();
-
-// const sequelizeSessionStore = new SessionStore({
-//     db: db,
-//     table : 'session'
-// });
 
 APP.use(cors({ origin: "*" }));
 APP.use(bodyParser.json());

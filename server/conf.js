@@ -1,5 +1,5 @@
 const Settings = {
-  port: 3000,
+  port: 4000,
   db: {
     user: "postgres",
     host: "localhost",
@@ -15,8 +15,8 @@ const Settings = {
     saveUninitialized: true,
   },
   jwt: {
-    secret: "jwtSecret",
-  },
+    secret: "jwtSecret"
+  }
 };
 
 module.exports = Settings;

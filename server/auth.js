@@ -1,47 +1,49 @@
 const jwt = require("jsonwebtoken");
-const Settings = require("../conf");
+const Settings = require("./conf");
 
-const { User, Profile, Session } = require("../models");
+const { User, Profile, Session } = require("./models");
 
 const requireAuth = async (request, response, next) => {
   const token = request.header("authorization");
 
+  //check token
   if (token == null) {
     return response.status(401).json({ error: "Access-denied" });
   }
-
+  //check validity
   try {
     const saved = await Session.findOne({ where: { token: token } });
     console.log(saved);
-    if (saved && saved.token == token) {
+    if (saved && saved.token === token) {
       const user = await jwt.verify(token, Settings.jwt.secret);
       console.log(user);
-      request.user = user;
+      request.user = user; //if verified the token will be decoded and the username of the user will be extracted and passed.
       next();
     } else {
       response.status(401).json({ error: "Unauthorized" });
     }
-  } catch (err) {
-    response.status(401).json({ error: err });
+  } catch (e) {
+    response.status(401).json({ error: e });
   }
 };
 
 const jwtLogin = async (request, response) => {
   let creds = request.body;
+
   const user = await User.findOne({
     where: { email: creds.email, password: creds.password },
   });
   if (user) {
-    const data = { id: user.id, email: user.id, isAdmin: user.isAdmin };
+    const data = { id: user.id, email: user.email, isAdmin: user.isAdmin };
     const accessToken = jwt.sign(data, Settings.jwt.secret, {
       expiresIn: "1800s",
     });
     await user.createSession({ token: accessToken });
     console.log(user, accessToken);
 
-    response.status(201).json({ token: accessToken });
+    response.status(201).json({ token: accessToken, user: user });
   } else {
-    response.status(502).json({ error: "Wrong username or password" });
+    response.status(502).json({ error: "Wrong username or Password" });
   }
 };
 
@@ -59,24 +61,26 @@ const handleSignup = async (request, response) => {
   }
 
   try {
+    console.log(params);
     const newUser = await User.create(params, { include: [Profile] });
     if (newUser) {
       response.status(201).json({ id: newUser.id });
     }
-  } catch (err) {
-    response.status(400).send(err);
+  } catch (error) {
+    console.error(error);
+    response.status(400).send(error);
   }
-
   response.end();
 };
 
 const handleSignout = async (request, response) => {
   const token = request.header("authorization");
 
+  //check token
   if (token == null) {
     return response.status(401).json({ error: "Access-denied" });
   }
-
+  //check validity
   try {
     const saved = await Session.findOne({ where: { token: token } });
 
@@ -87,8 +91,8 @@ const handleSignout = async (request, response) => {
     } else {
       response.status(401).json({ error: "Unauthorized" });
     }
-  } catch (err) {
-    response.status(401).json({ errror: err });
+  } catch (e) {
+    response.status(401).json({ error: e });
   }
 };
 
