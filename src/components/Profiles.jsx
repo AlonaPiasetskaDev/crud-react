@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 
 import { useAuth } from "../context/auth";
-
+import { useProfilesContext } from "../context/profiles";
 import { useState } from "react";
 
 const EditUser = (props) => {
@@ -41,7 +41,7 @@ const EditUser = (props) => {
             <Form.Check
               type="checkbox"
               label="is admin"
-              defaultChecked={currentUser.isAdmin ? true : false}
+              defaultChecked={!!currentUser.isAdmin}
               // defaultValue={currentUser.isAdmin}
             />
           </Form.Group>
@@ -189,18 +189,21 @@ const Profiles = () => {
   const [profileModalShow, setProfileModalShow] = useState(false);
   const [createProfileModal, setCreateProfileModalShow] = useState(false);
   const { signed, currentUser } = useAuth();
+  const { profiles } = useProfilesContext();
+
+
   console.log(currentUser);
 
-  console.log("profiles");
-  //
-  let profiles;
-  fetch(`http://localhost:4000/${currentUser.id}/profiles/`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("data", data);
-      profiles = data;
-    });
-  console.log(profiles);
+  // console.log("profiles");
+  // //
+  // let profiles;
+  // fetch(`http://localhost:4000/${currentUser.id}/profiles/`)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     console.log("data", data);
+  //     profiles = data;
+  //   });
+  // console.log(profiles);
 
   return (
     <Container className="profiles">
