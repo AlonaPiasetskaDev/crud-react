@@ -1,6 +1,5 @@
 import { Row, Col, Container, Card } from "react-bootstrap";
 
-
 const Dashboard = (props) => {
   console.log("Dashboard");
 
