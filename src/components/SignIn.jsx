@@ -34,7 +34,11 @@ const SignIn = (props) => {
                 }}
                 type="email"
                 placeholder="Enter email"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid email.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
@@ -47,7 +51,11 @@ const SignIn = (props) => {
                 }}
                 type="password"
                 placeholder="Password"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid password.
+              </Form.Control.Feedback>
             </Form.Group>
           </Container>
 

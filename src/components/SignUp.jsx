@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Container, Button, Form } from "react-bootstrap";
+import { Container, Button, Form } from "react-bootstrap";
 
 const validateSignUp = (data) => {
   const errors = [];
@@ -53,7 +53,6 @@ const validateSignUp = (data) => {
 };
 
 const SignUp = (props) => {
-  const { isOpen, onHide, handleLogin } = props;
   const [validated, setValidated] = useState(false);
 
   const [signUpData, setSignUpData] = useState({
@@ -65,6 +64,7 @@ const SignUp = (props) => {
 
   const handleSubmit = (e) => {
     const form = e.currentTarget;
+    validateSignUp(signUpData);
     if (form.checkValidity() === false) {
       // e.preventDefault();
       // e.stopPropagation();
@@ -76,10 +76,7 @@ const SignUp = (props) => {
 
   // const
 
-  console.log("SignUpModal");
   return (
-    // <Modal {...props} fullscreen={true}>
-    //   <Modal.Body>
     <>
       <Container className="mt-5 justify-content-center">
         <h2>Create your account</h2>
@@ -87,7 +84,7 @@ const SignUp = (props) => {
           <Form
             validated={validated}
             onSubmit={(e) => {
-              e.handleSubmit();
+              handleSubmit();
               e.preventDefault();
               console.log("result", signUpData);
               validateSignUp(signUpData);
@@ -99,6 +96,7 @@ const SignUp = (props) => {
                 <Form.Control
                   type="text"
                   placeholder="Enter username"
+                  required
                   onChange={(e) => {
                     setSignUpData((prevState) => ({
                       ...prevState,
@@ -118,6 +116,7 @@ const SignUp = (props) => {
                 <Form.Control
                   type="email"
                   placeholder="Enter email"
+                  required
                   onChange={(e) => {
                     setSignUpData((prevState) => ({
                       ...prevState,
@@ -136,6 +135,7 @@ const SignUp = (props) => {
                 <Form.Control
                   type="password"
                   placeholder="Password"
+                  required
                   onChange={(e) => {
                     setSignUpData((prevState) => ({
                       ...prevState,

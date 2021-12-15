@@ -7,8 +7,6 @@ const ProfilesContext = createContext({});
 
 export const ProfilesProvider = (props) => {
   const { currentUser } = useAuth();
-  console.log("ProfilesProvider", currentUser);
-  // stores authorized user profiles
   const [profiles, setProfiles] = useState(null);
 
   useEffect(() => {
@@ -17,8 +15,6 @@ export const ProfilesProvider = (props) => {
         .get(`users/${currentUser.id}/profiles`)
         .then((data) => setProfiles(data));
   }, [currentUser]);
-
-  console.log("profiles", profiles);
 
   const fetchProfiles = async (userId) => {
     return await api.get(`users/${userId}/profiles`);

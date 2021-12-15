@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
-  Card,
+  // Card,
   Button,
   Container,
   Col,
@@ -32,7 +32,7 @@ const EditUserModal = (props) => {
       new FormData(editFormRef.current).entries()
     );
     // тут isAdmin = "ON" или его нет
-    console(" EditUserModal handleSaveClick");
+    console.log(" EditUserModal handleSaveClick");
     console.log(data);
 
     data.isAdmin ? (data.isAdmin = true) : (data.isAdmin = false);

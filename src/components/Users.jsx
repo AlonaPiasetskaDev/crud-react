@@ -6,9 +6,9 @@ const Users = (props) => {
   const { signed, currentUser } = useAuth();
   const navigate = useNavigate();
   <h1>Users:</h1>;
-
+  console.log(currentUser);
   return (
-    <Container>
+    <Container className="mt-5">
       <h2>Users:</h2>
       <Container className="mt-5">
         <Card
@@ -18,10 +18,10 @@ const Users = (props) => {
           onClick={() => navigate("/profiles")}
         >
           <Card.Body>
-            <Card.Title>Username</Card.Title>
+            <Card.Title>{currentUser.name}</Card.Title>
             <Card.Text>
-              <p>Email</p>
-              <p>profile count</p>
+              <p>{currentUser.email}</p>
+              <p>1 profile</p>
               {/* {userProfiles.length} {userProfiles.length === 1 ? "profile" : "profiles"} */}
             </Card.Text>
           </Card.Body>

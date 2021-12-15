@@ -4,7 +4,7 @@ const post = async (endpoint, body) => {
     headers: { "Content-Type": "application/json", ...defaults.headers },
     body: JSON.stringify(body),
   };
-  console.log(options);
+  // console.log(options);
   const res = await fetch(`${defaults.host}/${endpoint}`, options);
   if (!res.ok) {
     throw new Error(`An error has occured: ${res.status}`);

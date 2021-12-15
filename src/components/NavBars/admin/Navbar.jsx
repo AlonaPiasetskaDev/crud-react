@@ -9,9 +9,9 @@ import {
 // import { useState } from "react";
 import { useAuth } from "../context/auth";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import defaultAvatar from "./img/defaultAvatar.png";
+import adminAvatar from "../../img/adminAvatar.png";
 
-const NavBar = () => {
+const NavbarAdmin = () => {
   const { signed, currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const onLogout = (e) => navigate("logout");
@@ -21,7 +21,7 @@ const NavBar = () => {
       <Container>
         <Navbar.Brand>
           <img
-            src={defaultAvatar}
+            src={adminAvatar}
             width="30"
             height="30"
             className="d-inline-block align-top"
@@ -29,7 +29,7 @@ const NavBar = () => {
             style={{ fontSize: "1.1rem" }}
           />{" "}
           <span style={{ marginLeft: ".8rem", fontSize: "1.1rem" }}>
-            {signed ? currentUser.name.toLowerCase() : "guest"}
+            currentUser.name.toLowerCase()
           </span>
         </Navbar.Brand>
         <Nav>
@@ -41,22 +41,16 @@ const NavBar = () => {
                   <i className="bi bi-person-rolodex" width={"1em"}></i>
                 </Link>
               </Nav.Link>
-
-              {currentUser.isAdmin && (
-                <>
-                  <Nav.Link>
-                    <Link className="nav-link" to="dashboard">
-                      Dashboard{" "}
-                      <i className="bi bi-reception-3" width={"1em"}></i>
-                    </Link>
-                  </Nav.Link>
-                  <Nav.Link>
-                    <Link className="nav-link" to="users">
-                      Users <i className="bi bi-people-fill" width={"1em"}></i>
-                    </Link>
-                  </Nav.Link>
-                </>
-              )}
+              <Nav.Link>
+                <Link className="nav-link" to="dashboard">
+                  Dashboard <i className="bi bi-reception-3" width={"1em"}></i>
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link className="nav-link" to="users">
+                  Users <i className="bi bi-people-fill" width={"1em"}></i>
+                </Link>
+              </Nav.Link>
               <Nav.Link href="#" onClick={onLogout}>
                 <Link to="#" className="nav-link">
                   Log out
@@ -70,4 +64,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default NavbarAdmin;
