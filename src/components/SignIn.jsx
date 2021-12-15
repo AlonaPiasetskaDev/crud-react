@@ -1,16 +1,17 @@
 import { Container, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useAuth } from "../context/auth";
+import { useParams, useNavigate } from "react-router-dom";
 
 const SignIn = (props) => {
   const [result, setResult] = useState({ email: "", password: "" });
   const { signed, login } = useAuth();
-  console.log(signed);
+  const navigate = useNavigate();
+
   async function handleLogin(e) {
     e.preventDefault();
     await login({ email: result.email, password: result.password });
-    props.auth = true;
-    console.log("props.auth", props.auth);
+    navigate("/");
   }
 
   return (

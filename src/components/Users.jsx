@@ -2,7 +2,7 @@ import { Card, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 
-const Users = (users, profiles) => {
+const Users = (props) => {
   const { signed, currentUser } = useAuth();
   const navigate = useNavigate();
   <h1>Users:</h1>;

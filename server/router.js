@@ -3,6 +3,7 @@ const express = require("express");
 const users = require("./handlers/users");
 const profiles = require("./handlers/profile");
 const auth = require("./auth");
+const dashboard = require("./handlers/dashboard");
 const router = express.Router({ mergeParams: true });
 
 router.use(function timeLog(req, res, next) {
@@ -20,7 +21,7 @@ router.use(function timeLog(req, res, next) {
 router.post("/signin", auth.jwtLogin);
 router.post("/signup", auth.handleSignup);
 router.post("/signout", auth.requireAuth, auth.handleSignout);
-
+router.get("/dashboard", auth.requireAuth, dashboard.getStats);
 router.get("/users", auth.requireAuth, users.listUsers);
 // router.put("/users/:userId", auth.requireAuth, users.updateUser);
 // router.post("/users", auth.requireAuth, users.createUser);  ADMIN ONLY. Almost the same as handleSignup

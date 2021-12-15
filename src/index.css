@@ -15,3 +15,7 @@ code {
 .btn-sm::hover .icon {
   color: #4E4B66;
 }
+
+#auth {
+  margin-top: 0;
+}

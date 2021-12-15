@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 
+
 # testing
 /coverage
 
@@ -21,3 +22,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#temporary files
+src/components/actions
+src/components/reducers
+src/components/services
+src/components/protectedRoute.jsx
+src/components/utils.jsx
+src/data
+crude-profiles.zip
+

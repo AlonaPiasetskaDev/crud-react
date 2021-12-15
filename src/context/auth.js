@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 
-import * as api from "../api";
+import * as api from "../api/api";
 
 const AuthContext = createContext({});
 
@@ -37,9 +37,25 @@ export const AuthProvider = (props) => {
     sessionStorage.removeItem("@App:token");
   };
 
+  const signup = async (data) => {
+    const res = await api.post("signup", data);
+    console.log(res);
+    // setCurrentUser(user);
+    // api.defaults.headers.Authorization = `${token}`;
+
+    // sessionStorage.setItem("@App:user", JSON.stringify(user));
+    // sessionStorage.setItem("@App:token", token);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ signed: Boolean(currentUser), currentUser, login, logout }}
+      value={{
+        signed: Boolean(currentUser),
+        currentUser,
+        login,
+        logout,
+        signup,
+      }}
     >
       {props.children}
     </AuthContext.Provider>

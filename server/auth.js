@@ -36,7 +36,7 @@ const jwtLogin = async (request, response) => {
   if (user) {
     const data = { id: user.id, email: user.email, isAdmin: user.isAdmin };
     const accessToken = jwt.sign(data, Settings.jwt.secret, {
-      expiresIn: "1800s",
+      expiresIn: "2592000s",
     });
     await user.createSession({ token: accessToken });
     console.log(user, accessToken);
