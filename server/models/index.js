@@ -22,25 +22,9 @@ const Session = sequelize.define('session', {
     token: {type: DataTypes.STRING, allowNull: false},
 })
 
-// const Role = sequelize.define('role', {
-//     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-//     name: {type: DataTypes.STRING, unique: true, defaultValue: "USER"}
-// })
-
-// const Gender = sequelize.define('gender', {
-//     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-//     name: {type: DataTypes.STRING, unique: true, allowNull: false}
-// })
-
 User.hasOne(Session)
 User.hasMany(Profile)
-// Profile.belongsTo(User)
 
-// Role.hasMany(User)
-// User.belongsTo(Role)
-
-// Gender.hasMany(Profile)
-// Profile.belongsTo(Gender)
 
 module.exports = {
     User,
