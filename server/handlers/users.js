@@ -18,6 +18,31 @@ const listUsers = async (request, response) => {
   }
 };
 
+// const updateUser = async (request, response) => {
+//   const id = parseInt(request.params.id);
+//
+//   try {
+//     const updatedUser = await db.update('users', id, request.body)
+//     response.status(201).json(updatedUser)
+//   }  catch (err) {
+//     console.log(err)
+//     response.status(400).send(err.detail)
+//
+//   }
+// };
+
+// const deleteUser = (request, response) => {
+//   const id = parseInt(request.params.id);
+//   pool.query("DELETE FROM users WHERE id = $1", [id], (error, results) => {
+//     if (error) {
+//       console.error(error.stack);
+//       return;
+//     }
+//     response.status(200).send(`User deleted with ID: ${id}`);
+//   });
+// };
+
 module.exports = {
-  listUsers
+  listUsers,
+  // deleteUser,
 };

@@ -11,7 +11,7 @@ const Settings = {
     name: "SID",
     secret: "verySecret",
     resave: true,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, 
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
     saveUninitialized: true,
   },
   jwt: {

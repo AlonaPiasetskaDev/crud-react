@@ -23,6 +23,9 @@ router.post("/signup", auth.handleSignup);
 router.post("/signout", auth.requireAuth, auth.handleSignout);
 router.get("/dashboard", auth.requireAuth, dashboard.getStats);
 router.get("/users", auth.requireAuth, users.listUsers);
+// router.put("/users/:userId", auth.requireAuth, users.updateUser);
+// router.post("/users", auth.requireAuth, users.createUser);  ADMIN ONLY. Almost the same as handleSignup
+// router.delete("/users/:userId", auth.requireAuth, users.updateUser);  ADMIN ONLY
 
 router.get("/users/:userId/profiles", auth.requireAuth, profiles.listProfiles);
 router.post(

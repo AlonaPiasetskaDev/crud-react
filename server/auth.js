@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const Settings = require("./conf");
-const expireTime = 2592000;
 
 const { User, Profile, Session } = require("./models");
 
@@ -37,9 +36,10 @@ const jwtLogin = async (request, response) => {
   if (user) {
     const data = { id: user.id, email: user.email, isAdmin: user.isAdmin };
     const accessToken = jwt.sign(data, Settings.jwt.secret, {
-      expiresIn: `${expireTime}s`,
+      expiresIn: "2592000s",
     });
     await user.createSession({ token: accessToken });
+    console.log(user, accessToken);
 
     response.status(201).json({ token: accessToken, user: user });
   } else {
@@ -61,11 +61,13 @@ const handleSignup = async (request, response) => {
   }
 
   try {
+    console.log(params);
     const newUser = await User.create(params, { include: [Profile] });
     if (newUser) {
       response.status(201).json({ id: newUser.id });
     }
   } catch (error) {
+    console.error(error);
     response.status(400).send(error);
   }
   response.end();
@@ -73,9 +75,12 @@ const handleSignup = async (request, response) => {
 
 const handleSignout = async (request, response) => {
   const token = request.header("authorization");
+
+  //check token
   if (token == null) {
     return response.status(401).json({ error: "Access-denied" });
   }
+  //check validity
   try {
     const saved = await Session.findOne({ where: { token: token } });
 
